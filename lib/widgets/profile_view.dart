@@ -171,7 +171,7 @@ class _ProfileViewState extends State<ProfileView> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                    'سفارش',
+                                                    'آمار',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       color: AppTheme.black,
@@ -295,7 +295,7 @@ class _ProfileViewState extends State<ProfileView> {
                                                         const EdgeInsets.all(
                                                             8.0),
                                                     child: Text(
-                                                      'پیام ها',
+                                                      '',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(

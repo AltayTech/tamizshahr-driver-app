@@ -3,14 +3,14 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../provider/app_theme.dart';
+import 'package:tamizshahrdriver/screens/customer_info/customer_user_info_screen.dart';
+import 'package:tamizshahrdriver/screens/statistics_screen.dart';
 
 import '../provider/auth.dart';
 import '../provider/customer_info.dart';
 import '../screens/about_us_screen.dart';
 import '../screens/contact_with_us_screen.dart';
 import '../screens/customer_info/login_screen.dart';
-import '../screens/customer_info/profile_screen.dart';
 import '../screens/guide_screen.dart';
 import '../screens/navigation_bottom_screen.dart';
 
@@ -112,7 +112,7 @@ class MainDrawer extends StatelessWidget {
                         Navigator.of(context).pop();
                         auth.isAuth
                             ? Navigator.of(context)
-                                .pushNamed(ProfileScreen.routeName)
+                                .pushNamed(CustomerUserInfoScreen.routeName)
                             : Navigator.of(context)
                                 .pushNamed(LoginScreen.routeName);
                       },
@@ -150,9 +150,28 @@ class MainDrawer extends StatelessWidget {
 //                                  .pushNamed(NavigationBottomScreen.routeName);
                             },
                           ),
+                          ListTile(
+                            title: Text(
+                              'آمار',
+                              style: TextStyle(
+                                fontFamily: "Iransans",
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: textColor,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                            trailing: Icon(
+                              Icons.format_list_numbered,
+                              color: iconColor,
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pop();
 
-
-
+                              Navigator.of(context)
+                                  .pushNamed(StatisticsScreen.routeName);
+                            },
+                          ),
                           ListTile(
                             title: Text(
                               'راهنما',
@@ -239,9 +258,9 @@ class MainDrawer extends StatelessWidget {
                             ),
                             onTap: () async {
                               Provider.of<CustomerInfo>(context, listen: false)
-                                  .customer = Provider.of<CustomerInfo>(context,
+                                  .driver = Provider.of<CustomerInfo>(context,
                                       listen: false)
-                                  .customer_zero;
+                                  .driver_zero;
                               await Provider.of<Auth>(context, listen: false)
                                   .removeToken();
                               Provider.of<Auth>(context, listen: false)

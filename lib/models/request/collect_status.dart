@@ -7,8 +7,8 @@ class CollectStatus {
   factory CollectStatus.fromJson(Map<String, dynamic> parsedJson) {
 
       return CollectStatus(
-        estimated: parsedJson['estimated'],
-        exact: parsedJson['exact'],
+        estimated: parsedJson['estimated']!=null&&parsedJson['estimated']!=''?parsedJson['estimated']:'0',
+        exact: parsedJson['exact']!=null&&parsedJson['exact']!=''?parsedJson['exact']:'0',
       );
   }
   Map<String, dynamic> toJson() {

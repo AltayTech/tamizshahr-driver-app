@@ -4,10 +4,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tamizshahrdriver/models/driver.dart';
+import 'package:tamizshahrdriver/models/driver_data.dart';
 
 import '../models/city.dart';
 import '../models/customer.dart';
-import '../models/personal_data.dart';
 import '../models/province.dart';
 import '../models/search_detail.dart';
 import '../models/shop.dart';
@@ -26,28 +27,27 @@ class CustomerInfo with ChangeNotifier {
   String get payUrl => _payUrl;
   List<File> chequeImageList = [];
 
-  static Customer _customer_zero = Customer(
-    personalData: PersonalData(
-      first_name: '',
-      last_name: '',
+  static Driver _customer_zero = Driver(
+    driver_data: DriverData(
+      fname: '',
+      lname: '',
       email: '',
       ostan: '',
       city: '',
-//      address: '',
       postcode: '',
       phone: '',
     ),
     money: '0',
   );
-  Customer _customer = _customer_zero;
+  Driver _driver = _customer_zero;
   String _token;
 
-  Customer get customer => _customer;
+  Driver get driver => _driver;
 
   Future<void> getCustomer() async {
     print('getCustomer');
 
-    final url = Urls.rootUrl + Urls.customerEndPoint;
+    final url = Urls.rootUrl + Urls.driverEndPoint;
     print(url);
 
     final prefs = await SharedPreferences.getInstance();
@@ -56,7 +56,7 @@ class CustomerInfo with ChangeNotifier {
 
     print(_token);
 
-    Customer customers;
+    Driver driver;
     try {
       final response = await get(url, headers: {
         'Authorization': 'Bearer $_token',
@@ -67,9 +67,9 @@ class CustomerInfo with ChangeNotifier {
       final extractedData = json.decode(response.body);
       print(extractedData);
 
-      customers = Customer.fromJson(extractedData);
+      driver = Driver.fromJson(extractedData);
 
-      _customer = customers;
+      _driver = driver;
 
       notifyListeners();
     } catch (error) {
@@ -81,7 +81,7 @@ class CustomerInfo with ChangeNotifier {
   Future<void> sendCustomer(Customer customer) async {
     print('sendCustomer');
 
-    final url = Urls.rootUrl + Urls.customerEndPoint;
+    final url = Urls.rootUrl + Urls.driverEndPoint;
 
     final prefs = await SharedPreferences.getInstance();
 
@@ -134,11 +134,11 @@ class CustomerInfo with ChangeNotifier {
 
   int get currentOrderId => _currentOrderId;
 
-  set customer(Customer value) {
-    _customer = value;
+  set driver(Driver value) {
+    _driver = value;
   }
 
-  Customer get customer_zero => _customer_zero;
+  Driver get driver_zero => _customer_zero;
 
   Shop get shop => _shop;
 
@@ -365,4 +365,41 @@ class CustomerInfo with ChangeNotifier {
   List<Status> _typesItems = [];
 
   List<Status> get typesItems => _typesItems;
+
+  Future<void> sendClearingRequest(String money,String shaba, bool isLogin) async {
+    print('sendClearingRequest');
+    try {
+      if (isLogin) {
+        final prefs = await SharedPreferences.getInstance();
+        _token = prefs.getString('token');
+        print('tooookkkeeennnnnn  $_token');
+
+        final url = Urls.rootUrl + Urls.clearingEndPoint;
+        print('url  $url');
+
+        final response = await post(
+          url,
+          headers: {
+            'Authorization': 'Bearer $_token',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: jsonEncode(
+            {
+              'money': money,
+              'shaba':shaba,
+
+            },
+          ),
+        );
+
+        final extractedData = json.decode(response.body);
+        print(extractedData.toString());
+      }
+      notifyListeners();
+    } catch (error) {
+      print(error.toString());
+      throw (error);
+    }
+  }
 }

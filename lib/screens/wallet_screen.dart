@@ -212,13 +212,13 @@ class _WalletScreenState extends State<WalletScreen>
                                           ),
                                           Consumer<CustomerInfo>(
                                             builder: (_, data, ch) => Text(
-                                              data.customer != null
+                                              data.driver != null
                                                   ? EnArConvertor()
                                                       .replaceArNumber(
                                                           currencyFormat
                                                               .format(double
                                                                   .parse(data
-                                                                      .customer
+                                                                      .driver
                                                                       .money))
                                                               .toString())
                                                   : EnArConvertor()
@@ -473,9 +473,9 @@ class _WalletScreenState extends State<WalletScreen>
                           ],
                         ),
                         Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
+                          bottom: 15,
+                          left: 15,
+                          right: 15,
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context)
@@ -483,8 +483,8 @@ class _WalletScreenState extends State<WalletScreen>
                             },
                             child: ButtonBottom(
                               width: deviceWidth * 0.9,
-                              height: deviceWidth * 0.14,
-                              text: 'ادامه',
+                              height: deviceWidth * 0.12,
+                              text: 'درخواست تسویه حساب',
                               isActive: true,
                             ),
                           ),
@@ -514,7 +514,7 @@ class _WalletScreenState extends State<WalletScreen>
                                         child: loadedProductstolist.isEmpty
                                             ? Center(
                                                 child: Text(
-                                                'محصولی وجود ندارد',
+                                                'تراکنشی وجود ندارد',
                                                 style: TextStyle(
                                                   fontFamily: 'Iransans',
                                                   fontSize:

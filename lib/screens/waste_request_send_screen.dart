@@ -8,9 +8,7 @@ import '../models/customer.dart';
 import '../models/region.dart';
 import '../models/request/address.dart';
 import '../models/request/collect.dart';
-import '../models/request/pasmand.dart';
 import '../models/request/price_weight.dart';
-import '../models/request/request_address.dart';
 import '../models/request/request_waste.dart';
 import '../models/request/wasteCart.dart';
 import '../provider/app_theme.dart';
@@ -134,20 +132,20 @@ class _WasteRequestSendScreenState extends State<WasteRequestSendScreen> {
     totalWeight = 0;
 
     totalPricePure = 0;
-    if (wasteCartItems.length > 0) {
-      for (int i = 0; i < wasteCartItems.length; i++) {
-        print(wasteCartItems[i].featured_image.sizes.medium);
-        wasteCartItems[i].prices.length > 0
-            ? totalPrice = totalPrice +
-                int.parse(getPrice(
-                        wasteCartItems[i].prices, wasteCartItems[i].weight)) *
-                    wasteCartItems[i].weight
-            : totalPrice = totalPrice;
-        wasteCartItems[i].prices.length > 0
-            ? totalWeight = totalWeight + wasteCartItems[i].weight
-            : totalWeight = totalWeight;
-      }
-    }
+//    if (wasteCartItems.length > 0) {
+//      for (int i = 0; i < wasteCartItems.length; i++) {
+//        print(wasteCartItems[i].featured_image.sizes.medium);
+//        wasteCartItems[i].prices.length > 0
+//            ? totalPrice = totalPrice +
+//                int.parse(getPrice(
+//                        wasteCartItems[i].prices, wasteCartItems[i].weight)) *
+//                    wasteCartItems[i].weight
+//            : totalPrice = totalPrice;
+//        wasteCartItems[i].prices.length > 0
+//            ? totalWeight = totalWeight + wasteCartItems[i].weight
+//            : totalWeight = totalWeight;
+//      }
+//    }
     totalPricePure = totalPrice;
 
     setState(() {
@@ -228,32 +226,21 @@ class _WasteRequestSendScreenState extends State<WasteRequestSendScreen> {
     });
 
     List<Collect> collectList = [];
-    for (int i = 0; i < wasteCartItems.length; i++) {
-      collectList.add(
-        Collect(
-          exact_weight: wasteCartItems[i].weight.toString(),
-          exact_price: getPrice(wasteCartItems[i].prices, wasteCartItems[i].weight),
-          pasmand: Pasmand(
-              id: wasteCartItems[i].id, post_title: wasteCartItems[i].name),
-        ),
-      );
-    }
+//    for (int i = 0; i < wasteCartItems.length; i++) {
+//      collectList.add(
+//        Collect(
+//          exact_weight: wasteCartItems[i].weight.toString(),
+//          exact_price: getPrice(wasteCartItems[i].prices, wasteCartItems[i].weight),
+//          pasmand: Pasmand(
+//              id: wasteCartItems[i].id, post_title: wasteCartItems[i].name),
+//        ),
+//      );
+//    }
 
     requestWaste = RequestWaste(
-        total_number: wasteCartItems.length.toString(),
-        total_price: totalPrice.toString(),
-        total_weight: totalWeight.toString(),
-        collect_hours: selectedHours,
-        collect_day:
-            '${weekDays[selectedDay.weekDay - 1]}  ${selectedDay.day} ${weekDays[selectedDay.weekDay - 1]}',
-        address_data: RequestAddress(
-          name: selectedAddress.name,
-          address: selectedAddress.address,
-          region: selectedAddress.region.term_id.toString(),
-          latitude: selectedAddress.latitude,
-          longitude: selectedAddress.longitude,
-        ),
-        collect_list: collectList);
+      collected: true,
+      collect_list: collectList,
+    );
 
     setState(() {
       _isLoading = false;
@@ -265,8 +252,8 @@ class _WasteRequestSendScreenState extends State<WasteRequestSendScreen> {
       _isLoading = true;
     });
 
-    await Provider.of<Wastes>(context, listen: false)
-        .sendRequest(requestWaste, isLogin);
+//    await Provider.of<Wastes>(context, listen: false)
+//        .sendRequest(requestWaste, isLogin,);
 
     setState(() {
       _isLoading = false;

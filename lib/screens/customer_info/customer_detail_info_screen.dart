@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:tamizshahrdriver/models/driver.dart';
 
 import '../../models/customer.dart';
 import '../../provider/app_theme.dart';
@@ -19,7 +20,7 @@ class CustomerDetailInfoScreen extends StatefulWidget {
 }
 
 class _CustomerDetailInfoScreenState extends State<CustomerDetailInfoScreen> {
-  Customer customer;
+  Driver customer;
   var _isLoading = false;
   bool _isInit = true;
 
@@ -37,7 +38,7 @@ class _CustomerDetailInfoScreenState extends State<CustomerDetailInfoScreen> {
       _isLoading = true;
     });
     await Provider.of<CustomerInfo>(context, listen: false).getCustomer();
-    customer = Provider.of<CustomerInfo>(context, listen: false).customer;
+    customer = Provider.of<CustomerInfo>(context, listen: false).driver;
 
     setState(() {
       _isLoading = false;
@@ -150,19 +151,19 @@ class _CustomerDetailInfoScreenState extends State<CustomerDetailInfoScreen> {
                             children: <Widget>[
                               InfoItem(
                                 title: 'نام',
-                                text: customer.personalData.first_name,
+                                text: customer.driver_data.fname,
                                 bgColor: Colors.white,
                                 iconColor: Color(0xffA67FEC),
                               ),
                               InfoItem(
                                 title: 'نام خانوادگی',
-                                text: customer.personalData.last_name,
+                                text: customer.driver_data.lname,
                                 bgColor: Colors.white,
                                 iconColor: Color(0xffA67FEC),
                               ),
                               InfoItem(
                                 title: 'نوع کاربر',
-                                text: customer.type.name,
+                                text: customer.status.name,
                                 bgColor: Colors.white,
                                 iconColor: Color(0xffA67FEC),
                               ),
@@ -180,30 +181,30 @@ class _CustomerDetailInfoScreenState extends State<CustomerDetailInfoScreen> {
                             children: <Widget>[
                               InfoItem(
                                 title: 'ایمیل',
-                                text: customer.personalData.email,
+                                text: customer.driver_data.email,
                                 bgColor: Colors.white,
                                 iconColor: Color(0xffA67FEC),
                               ),
                               InfoItem(
                                 title: 'استان',
-                                text: customer.personalData.ostan != null
-                                    ? customer.personalData.ostan
+                                text: customer.driver_data.ostan != null
+                                    ? customer.driver_data.ostan
                                     : '',
                                 bgColor: Colors.white,
                                 iconColor: Color(0xff4392F1),
                               ),
                               InfoItem(
                                 title: 'شهر',
-                                text: customer.personalData.city != null
-                                    ? customer.personalData.city
+                                text: customer.driver_data.city != null
+                                    ? customer.driver_data.city
                                     : '',
                                 bgColor: Colors.white,
                                 iconColor: Color(0xff4392F1),
                               ),
                               InfoItem(
                                 title: 'کدپستی',
-                                text: customer.personalData.postcode != null
-                                    ? customer.personalData.postcode
+                                text: customer.driver_data.postcode != null
+                                    ? customer.driver_data.postcode
                                     : '',
                                 bgColor: Colors.white,
                                 iconColor: Color(0xff4392F1),

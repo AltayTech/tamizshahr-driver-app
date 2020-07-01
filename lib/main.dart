@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tamizshahrdriver/screens/statistics_screen.dart';
 
 import './provider/auth.dart';
 import './provider/wastes.dart';
 import './screens/about_us_screen.dart';
-import './screens/address_screen.dart';
 import './screens/clear_screen.dart';
 import './screens/collect_detail_screen.dart';
 import './screens/contact_with_us_screen.dart';
@@ -13,16 +13,16 @@ import './screens/home_screen.dart';
 import './screens/map_screen.dart';
 import './screens/navigation_bottom_screen.dart';
 import './screens/wallet_screen.dart';
-import './screens/waste_cart_screen.dart';
-import './screens/waste_request_date_screen.dart';
 import './screens/waste_request_send_screen.dart';
 import 'classes/strings.dart';
 import 'provider/customer_info.dart';
+import 'provider/deliveries.dart';
 import 'screens/collect_list_screen.dart';
 import 'screens/customer_info/customer_detail_info_edit_screen.dart';
 import 'screens/customer_info/login_screen.dart';
 import 'screens/customer_info/profile_screen.dart';
 import 'screens/guide_screen.dart';
+import 'screens/send_delivery_screen.dart';
 import 'screens/splash_Screen.dart';
 
 void main() => runApp(MyApp());
@@ -41,6 +41,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => Wastes(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Deliveries(),
         ),
       ],
       child: MaterialApp(
@@ -75,7 +78,6 @@ class MyApp extends StatelessWidget {
         routes: {
           NavigationBottomScreen.routeName: (ctx) => NavigationBottomScreen(),
           HomeScreen.routeName: (ctx) => HomeScreen(),
-          WasteCartScreen.routeName: (ctx) => WasteCartScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AboutUsScreen.routeName: (ctx) => AboutUsScreen(),
@@ -85,13 +87,13 @@ class MyApp extends StatelessWidget {
           CustomerUserInfoScreen.routeName: (ctx) => CustomerUserInfoScreen(),
           GuideScreen.routeName: (ctx) => GuideScreen(),
           MapScreen.routeName: (ctx) => MapScreen(),
-          AddressScreen.routeName: (ctx) => AddressScreen(),
-          WasteRequestDateScreen.routeName: (ctx) => WasteRequestDateScreen(),
           WasteRequestSendScreen.routeName: (ctx) => WasteRequestSendScreen(),
           CollectListScreen.routeName: (ctx) => CollectListScreen(),
           WalletScreen.routeName: (ctx) => WalletScreen(),
           CollectDetailScreen.routeName: (ctx) => CollectDetailScreen(),
           ClearScreen.routeName: (ctx) => ClearScreen(),
+          StatisticsScreen.routeName: (ctx) => StatisticsScreen(),
+          SendDeliveryScreen.routeName: (ctx) => SendDeliveryScreen(),
         },
       ),
     );

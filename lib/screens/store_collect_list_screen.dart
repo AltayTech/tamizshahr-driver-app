@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
+import 'package:tamizshahrdriver/models/request/delivery_waste_item.dart';
+import 'package:tamizshahrdriver/provider/deliveries.dart';
+import 'package:tamizshahrdriver/screens/send_delivery_screen.dart';
+import 'package:tamizshahrdriver/widgets/buton_bottom.dart';
 import 'package:tamizshahrdriver/widgets/collect_item_store_collect_screen.dart';
+import 'package:tamizshahrdriver/widgets/custom_dialog_enter.dart';
+import 'package:tamizshahrdriver/widgets/custom_dialog_profile.dart';
 
-import '../models/request/request_waste_item.dart';
 import '../models/search_detail.dart';
 import '../provider/app_theme.dart';
 import '../provider/auth.dart';
-import '../provider/wastes.dart';
-import '../widgets/collect_item_collect_screen.dart';
 import '../widgets/en_to_ar_number_convertor.dart';
 import '../widgets/main_drawer.dart';
 import 'customer_info/login_screen.dart';
@@ -40,16 +43,16 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
 
   @override
   void initState() {
-    Provider.of<Wastes>(context, listen: false).sPage = 1;
+    Provider.of<Deliveries>(context, listen: false).sPage = 1;
 
-    Provider.of<Wastes>(context, listen: false).searchBuilder();
+    Provider.of<Deliveries>(context, listen: false).searchBuilder();
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         if (page < productsDetail.max_page) {
           page = page + 1;
-          Provider.of<Wastes>(context, listen: false).sPage = page;
+          Provider.of<Deliveries>(context, listen: false).sPage = page;
 
           searchItems();
         }
@@ -75,13 +78,13 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
     super.didChangeDependencies();
   }
 
-  List<RequestWasteItem> loadedProducts = [];
-  List<RequestWasteItem> loadedProductstolist = [];
+  List<DeliveryWasteItem> loadedProducts = [];
+  List<DeliveryWasteItem> loadedProductstolist = [];
 
   Future<void> _submit() async {
     loadedProducts.clear();
     loadedProducts =
-        await Provider.of<Wastes>(context, listen: false).CollectItems;
+        await Provider.of<Deliveries>(context, listen: false).deliveriesItems;
     loadedProductstolist.addAll(loadedProducts);
   }
 
@@ -95,9 +98,10 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
       _isLoading = true;
     });
 
-    Provider.of<Wastes>(context, listen: false).searchBuilder();
-    await Provider.of<Wastes>(context, listen: false).searchCollectItems();
-    productsDetail = Provider.of<Wastes>(context, listen: false).searchDetails;
+    Provider.of<Deliveries>(context, listen: false).searchBuilder();
+    await Provider.of<Deliveries>(context, listen: false).searchCollectItems();
+    productsDetail =
+        Provider.of<Deliveries>(context, listen: false).searchDetails;
     _submit();
 
     setState(() {
@@ -111,9 +115,9 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
     });
     print(_isLoading.toString());
 
-    Provider.of<Wastes>(context, listen: false).sPage = 1;
+    Provider.of<Deliveries>(context, listen: false).sPage = 1;
 
-    Provider.of<Wastes>(context, listen: false).searchBuilder();
+    Provider.of<Deliveries>(context, listen: false).searchBuilder();
 
     loadedProductstolist.clear();
 
@@ -125,6 +129,27 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
     });
   }
 
+  void _showLogindialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => CustomDialogEnter(
+        title: 'ورود',
+        buttonText: 'صفحه ورود ',
+        description: 'برای ادامه باید وارد شوید',
+      ),
+    );
+  }
+
+  void _showCompletedialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => CustomDialogProfile(
+        title: 'اطلاعات کاربری',
+        buttonText: 'صفحه پروفایل ',
+        description: 'برای ادامه باید اطلاعات کاربری تکمیل کنید',
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +157,9 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
     double deviceWidth = MediaQuery.of(context).size.width;
     var textScaleFactor = MediaQuery.of(context).textScaleFactor;
     bool isLogin = Provider.of<Auth>(context).isAuth;
+    bool isCompleted = Provider.of<Auth>(
+      context,
+    ).isCompleted;
 
     var currencyFormat = intl.NumberFormat.decimalPattern();
 
@@ -140,10 +168,11 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
         textDirection: TextDirection.rtl,
         child: SingleChildScrollView(
           child: !isLogin
-              ? Center(
-                  child: Wrap(
-                    direction: Axis.vertical,
-                    crossAxisAlignment: WrapCrossAlignment.center,
+              ? Container(
+                  height: deviceHeight * 0.4,
+                  width: deviceWidth,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -178,7 +207,22 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
                     children: <Widget>[
                       Column(
                         children: <Widget>[
-                          Card(
+                          Container(
+                            decoration: BoxDecoration(
+                                color: AppTheme.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppTheme.primary.withOpacity(0.08),
+                                    blurRadius: 10.10,
+                                    spreadRadius: 10,
+                                    offset: Offset(
+                                      0, // horizontal, move right 10
+
+                                      0, // vertical, move down 10
+                                    ),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(5)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -188,8 +232,8 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Spacer(),
-                                      Consumer<Wastes>(
-                                          builder: (_, Wastes, ch) {
+                                      Consumer<Deliveries>(
+                                          builder: (context, Deliveries, ch) {
                                         return Container(
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(
@@ -286,7 +330,7 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
                                   ),
                                   Container(
                                     width: double.infinity,
-                                    height: deviceHeight * 0.68,
+                                    height: deviceHeight * 0.55,
                                     child: ListView.builder(
                                       controller: _scrollController,
                                       scrollDirection: Axis.vertical,
@@ -303,6 +347,45 @@ class _StoreCollectListScreenState extends State<StoreCollectListScreen>
                             ),
                           )
                         ],
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        left: 10,
+                        right: 10,
+                        child:  InkWell(
+                                onTap: () async {
+                                  SnackBar addToCartSnackBar = SnackBar(
+                                    content: Text(
+                                      'قبلا جمع آوری شده است!',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Iransans',
+                                        fontSize: textScaleFactor * 14.0,
+                                      ),
+                                    ),
+                                    action: SnackBarAction(
+                                      label: 'متوجه شدم',
+                                      onPressed: () {
+                                        // Some code to undo the change.
+                                      },
+                                    ),
+                                  );
+                                  if (loadedProducts.isEmpty) {
+                                    Scaffold.of(context)
+                                        .showSnackBar(addToCartSnackBar);
+                                  } else if (!isLogin) {
+                                    _showLogindialog();
+                                  } else {
+                                    Navigator.of(context).pushNamed(SendDeliveryScreen.routeName);
+                                  }
+                                },
+                                child: ButtonBottom(
+                                  width: deviceWidth * 0.9,
+                                  height: deviceWidth * 0.14,
+                                  text: 'درخواست تحویل به انبار',
+                                  isActive: loadedProducts.isNotEmpty,
+                                ),
+                              ),
                       ),
                       Positioned(
                         top: 0,

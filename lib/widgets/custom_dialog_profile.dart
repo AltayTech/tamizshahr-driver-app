@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../provider/app_theme.dart';
+import 'package:tamizshahrdriver/screens/customer_info/customer_user_info_screen.dart';
 
-import '../screens/customer_info/profile_screen.dart';
+import '../provider/app_theme.dart';
 
 class CustomDialogProfile extends StatelessWidget {
   final String title, description, buttonText;
@@ -76,13 +76,14 @@ class CustomDialogProfile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                   child: InkWell(
                     onTap: () {
-                      return Navigator.of(context).popAndPushNamed(ProfileScreen.routeName);
+                      return Navigator.of(context)
+                          .popAndPushNamed(CustomerUserInfoScreen.routeName);
                     },
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.06,
                       width: MediaQuery.of(context).size.width * 0.4,
                       decoration: BoxDecoration(
-                        color:AppTheme.primary,
+                        color: AppTheme.primary,
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: Center(

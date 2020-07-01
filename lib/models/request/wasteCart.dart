@@ -1,43 +1,55 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
-import '../featured_image.dart';
-import '../status.dart';
-import 'price_weight.dart';
-
-
+import 'pasmand.dart';
 
 class WasteCart with ChangeNotifier {
-  final int id;
-  final String name;
-  final String excerpt;
-  final List<PriceWeight> prices;
-  final Status status;
-  final FeaturedImage featured_image;
-   int weight;
+  final Pasmand pasmand;
+  final String estimated_weight;
+  String exact_weight;
+  final String estimated_price;
+  final String exact_price;
+  bool isAdded;
 
   WasteCart({
-    this.id,
-    this.name,
-    this.excerpt,
-    this.prices,
-    this.status,
-    this.featured_image,
-    this.weight,
+    this.pasmand,
+    this.estimated_weight,
+    this.exact_weight,
+    this.estimated_price,
+    this.exact_price,
+    this.isAdded,
   });
 
   factory WasteCart.fromJson(Map<String, dynamic> parsedJson) {
-    var priceWeightList = parsedJson['prices'] as List;
-    List<PriceWeight> priceWeightRaw =
-        priceWeightList.map((i) => PriceWeight.fromJson(i)).toList();
-
     return WasteCart(
-      id: parsedJson['id'],
-      name: parsedJson['name'],
-      excerpt: parsedJson['excerpt'],
-      prices: priceWeightRaw,
-      status: Status.fromJson(parsedJson['Status']),
-      featured_image: FeaturedImage.fromJson(parsedJson['featured_image']),
-      weight:  parsedJson['weight'],
+      estimated_weight: parsedJson['estimated_weight'] != null ||
+              parsedJson['estimated_weight'] != ''
+          ? parsedJson['estimated_weight']
+          : '0',
+      exact_weight: parsedJson['exact_weight'] != null ||
+              parsedJson['exact_weight'] != ''
+          ? parsedJson['exact_weight']
+          : '0',
+      estimated_price: parsedJson['estimated_price'] != null ||
+              parsedJson['estimated_price'] != ''
+          ? parsedJson['estimated_price']
+          : '0',
+      exact_price: parsedJson['exact_price'] != null ||
+              parsedJson['exact_price'] != ''
+          ? parsedJson['exact_price']
+          : '0',
+      pasmand: Pasmand.fromJson(parsedJson['pasmand']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    Map pasmand = this.pasmand != null ? this.pasmand.toJson() : null;
+
+    return {
+      'pasmand': pasmand,
+      'estimated_weight': estimated_weight,
+      'exact_weight': exact_weight,
+      'estimated_price': estimated_price,
+      'exact_price': exact_price,
+    };
   }
 }

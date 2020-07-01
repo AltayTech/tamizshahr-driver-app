@@ -19,10 +19,22 @@ class Collect with ChangeNotifier {
 
   factory Collect.fromJson(Map<String, dynamic> parsedJson) {
     return Collect(
-      estimated_weight: parsedJson['estimated_weight'],
-      exact_weight: parsedJson['exact_weight'],
-      estimated_price: parsedJson['estimated_price'],
-      exact_price: parsedJson['exact_price'],
+      estimated_weight: parsedJson['estimated_weight'] != null &&
+              parsedJson['estimated_weight'] != ''
+          ? parsedJson['estimated_weight']
+          : '0',
+      exact_weight:
+          parsedJson['exact_weight'] != null && parsedJson['exact_weight'] != ''
+              ? parsedJson['exact_weight']
+              : '0',
+      estimated_price: parsedJson['estimated_price'] != null &&
+              parsedJson['estimated_price'] != ''
+          ? parsedJson['estimated_price']
+          : '0',
+      exact_price:
+          parsedJson['exact_price'] != null && parsedJson['exact_price'] != ''
+              ? parsedJson['exact_price']
+              : '0',
       pasmand: Pasmand.fromJson(parsedJson['pasmand']),
     );
   }

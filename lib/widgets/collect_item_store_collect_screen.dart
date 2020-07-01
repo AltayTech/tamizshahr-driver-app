@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
+import 'package:tamizshahrdriver/models/request/delivery_waste_item.dart';
 
-import '../models/request/request_waste_item.dart';
 import '../provider/app_theme.dart';
 import '../screens/collect_detail_screen.dart';
 import 'en_to_ar_number_convertor.dart';
@@ -14,7 +14,7 @@ class CollectItemStoreCollectsScreen extends StatelessWidget {
     var heightDevice = MediaQuery.of(context).size.height;
     var widthDevice = MediaQuery.of(context).size.width;
     var textScaleFactor = MediaQuery.of(context).textScaleFactor;
-    final collect = Provider.of<RequestWasteItem>(context, listen: false);
+    final collect = Provider.of<DeliveryWasteItem>(context, listen: false);
     var currencyFormat = intl.NumberFormat.decimalPattern();
 
     return Padding(
@@ -25,7 +25,6 @@ class CollectItemStoreCollectsScreen extends StatelessWidget {
           builder: (ctx, constraints) {
             return InkWell(
               onTap: () {
-
                 Navigator.of(context).pushNamed(
                   CollectDetailScreen.routeName,
                   arguments: collect.id,
@@ -53,7 +52,7 @@ class CollectItemStoreCollectsScreen extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    collect.collect_day,
+                                    collect.collect_date.day,
                                     maxLines: 1,
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
@@ -72,7 +71,7 @@ class CollectItemStoreCollectsScreen extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    collect.collect_hours,
+                                    collect.collect_date.time,
                                     maxLines: 1,
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
@@ -92,8 +91,8 @@ class CollectItemStoreCollectsScreen extends StatelessWidget {
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      EnArConvertor().replaceArNumber(
-                                          collect.total_weight.estimated),
+                                      EnArConvertor().replaceArNumber(collect
+                                          .total_collects_weight.estimated),
                                       maxLines: 1,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
@@ -121,8 +120,9 @@ class CollectItemStoreCollectsScreen extends StatelessWidget {
                                     child: Text(
                                       EnArConvertor().replaceArNumber(
                                           currencyFormat
-                                              .format(double.parse(
-                                                  collect.total_price.estimated))
+                                              .format(double.parse(collect
+                                                  .total_collects_price
+                                                  .estimated))
                                               .toString()),
                                       maxLines: 1,
                                       textAlign: TextAlign.left,

@@ -4,15 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
+
 import '../models/customer.dart';
+import '../models/search_detail.dart';
+import '../provider/app_theme.dart';
 import '../provider/auth.dart';
 import '../provider/customer_info.dart';
 import '../widgets/buton_bottom.dart';
 import '../widgets/currency_input_formatter.dart';
 import '../widgets/custom_dialog_send_request.dart';
-
-import '../models/search_detail.dart';
-import '../provider/app_theme.dart';
 import '../widgets/en_to_ar_number_convertor.dart';
 import '../widgets/main_drawer.dart';
 import 'customer_info/login_screen.dart';
@@ -207,12 +207,12 @@ class _ClearScreenState extends State<ClearScreen>
                                                   Consumer<CustomerInfo>(
                                                     builder: (_, data, ch) =>
                                                         Text(
-                                                      data.customer != null
+                                                      data.driver != null
                                                           ? EnArConvertor().replaceArNumber(
                                                               currencyFormat
                                                                   .format(double
                                                                       .parse(data
-                                                                          .customer
+                                                                          .driver
                                                                           .money))
                                                                   .toString())
                                                           : EnArConvertor()
@@ -377,11 +377,18 @@ class _ClearScreenState extends State<ClearScreen>
                                       Scaffold.of(context)
                                           .showSnackBar(addToCartSnackBar);
                                     } else {
-                                      Navigator.of(context)
-                                          .pushNamedAndRemoveUntil(
-                                              NavigationBottomScreen.routeName,
-                                              (Route<dynamic> route) => false);
-                                      _showSenddialog();
+                                      Provider.of<CustomerInfo>(context,listen: false)
+                                          .sendClearingRequest(
+                                              donationController.text,shabaController.text, isLogin)
+                                          .then((value) {
+                                        Navigator.of(context)
+                                            .pushNamedAndRemoveUntil(
+                                                NavigationBottomScreen
+                                                    .routeName,
+                                                (Route<dynamic> route) =>
+                                                    false);
+                                        _showSenddialog();
+                                      });
                                     }
                                   },
                                   child: ButtonBottom(

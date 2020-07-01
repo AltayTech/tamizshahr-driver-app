@@ -7,7 +7,9 @@ class Urls {
 
   static const collectsEndPoint = '/collects';
   static const checkCompletedEndPoint = '/customer/completed';
-  static const customerEndPoint = '/customer';
+  static const driverEndPoint = '/driver';
+  static const deliveriesEndPoint = '/deliveries';
+  static const clearingEndPoint = '/clearings';
 
   static const transactionsEndPoint = '/transactions';
 

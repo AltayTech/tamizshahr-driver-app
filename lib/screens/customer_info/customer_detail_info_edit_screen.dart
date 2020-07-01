@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tamizshahrdriver/models/driver.dart';
 import '../../models/status.dart';
 
 import '../../models/customer.dart';
@@ -40,16 +41,16 @@ class _CustomerDetailInfoEditScreenState
 
   @override
   void initState() {
-    Customer customer =
-        Provider.of<CustomerInfo>(context, listen: false).customer;
-    nameController.text = customer.personalData.first_name;
-    familyController.text = customer.personalData.last_name;
+    Driver customer =
+        Provider.of<CustomerInfo>(context, listen: false).driver;
+    nameController.text = customer.driver_data.fname;
+    familyController.text = customer.driver_data.lname;
 
-    typeController.text = customer.personalData.email;
-    ostanController.text = customer.personalData.ostan;
-    cityController.text = customer.personalData.city;
-    postCodeController.text = customer.personalData.postcode;
-    selectedType = customer.type;
+    typeController.text = customer.driver_data.email;
+    ostanController.text = customer.driver_data.ostan;
+    cityController.text = customer.driver_data.city;
+    postCodeController.text = customer.driver_data.postcode;
+    selectedType = customer.status;
 
     super.initState();
   }
@@ -94,8 +95,8 @@ class _CustomerDetailInfoEditScreenState
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
     var textScaleFactor = MediaQuery.of(context).textScaleFactor;
-    Customer customerInfo =
-        Provider.of<CustomerInfo>(context, listen: false).customer;
+    Driver customerInfo =
+        Provider.of<CustomerInfo>(context, listen: false).driver;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(

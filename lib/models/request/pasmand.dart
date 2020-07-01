@@ -7,8 +7,8 @@ class Pasmand {
   factory Pasmand.fromJson(Map<String, dynamic> parsedJson) {
 
       return Pasmand(
-        id: parsedJson['ID'],
-        post_title: parsedJson['post_title'],
+        id: parsedJson['ID']!=null? parsedJson['ID']:0,
+        post_title: parsedJson['post_title']!=null? parsedJson['post_title']:'',
       );
   }
   Map<String, dynamic> toJson() {

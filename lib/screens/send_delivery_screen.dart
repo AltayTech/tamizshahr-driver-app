@@ -4,16 +4,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 import 'package:tamizshahrdriver/models/request/collect.dart';
-import 'package:tamizshahrdriver/models/request/pasmand.dart';
 import 'package:tamizshahrdriver/models/request/request_waste.dart';
-import 'package:tamizshahrdriver/models/request/request_waste_item.dart';
-import 'package:tamizshahrdriver/models/request/wasteCart.dart';
-import 'package:tamizshahrdriver/widgets/collect_detail_item.dart';
+import 'package:tamizshahrdriver/provider/customer_info.dart';
+import 'package:tamizshahrdriver/provider/deliveries.dart';
+import 'package:tamizshahrdriver/widgets/collect_delivery_detail_item.dart';
+import 'package:tamizshahrdriver/widgets/custom_dialog_send_delivery.dart';
 import 'package:tamizshahrdriver/widgets/custom_dialog_send_request.dart';
 
 import '../provider/app_theme.dart';
 import '../provider/auth.dart';
-import '../provider/wastes.dart';
 import '../widgets/buton_bottom.dart';
 import '../widgets/custom_dialog_enter.dart';
 import '../widgets/custom_dialog_profile.dart';
@@ -21,22 +20,23 @@ import '../widgets/en_to_ar_number_convertor.dart';
 import '../widgets/main_drawer.dart';
 import 'navigation_bottom_screen.dart';
 
-class CollectDetailScreen extends StatefulWidget {
-  static const routeName = '/CollectDetailScreen';
+class SendDeliveryScreen extends StatefulWidget {
+  static const routeName = '/SendDeliveryScreen';
 
   @override
-  _CollectDetailScreenState createState() => _CollectDetailScreenState();
+  _SendDeliveryScreenState createState() => _SendDeliveryScreenState();
 }
 
-class _CollectDetailScreenState extends State<CollectDetailScreen>
+class _SendDeliveryScreenState extends State<SendDeliveryScreen>
     with TickerProviderStateMixin {
-  List<WasteCart> wasteCartItems = [];
+//  List<WasteCart> wasteCartItems = [];
   bool _isInit = true;
 
   var _isLoading = true;
-  double totalPrice = 0;
-  double totalWeight = 0;
-  RequestWasteItem loadedCollect;
+  int totalPrice = 0;
+  int totalWeight = 0;
+  int totalPricePure = 0;
+  List<Collect> loadedCollect = [];
 
   RequestWaste requestWaste;
 
@@ -80,6 +80,7 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
       await searchItems();
 
       await getWasteItems();
+      await Provider.of<CustomerInfo>(context, listen: false).getCustomer();
       print(
           'didChangeDependenciesdidChangeDependenciesdidChangeDependenciesdidChangeDependencies');
 
@@ -94,15 +95,18 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
     setState(() {
       _isLoading = true;
     });
-    final productId = ModalRoute.of(context).settings.arguments as int;
-    await Provider.of<Wastes>(context, listen: false)
-        .retrieveCollectItem(productId);
+//    final productId = ModalRoute.of(context).settings.arguments as int;
+//    await Provider.of<Wastes>(context, listen: false)
+//        .retrieveCollectItem(productId);
+
+    await Provider.of<Deliveries>(context, listen: false)
+        .getCollectedItemsToDeliver();
     loadedCollect =
-        Provider.of<Wastes>(context, listen: false).requestWasteItem;
-    await Provider.of<Wastes>(context, listen: false)
-        .addInitialWasteCart(loadedCollect.collect_list, true);
-    loadedCollect =
-        Provider.of<Wastes>(context, listen: false).requestWasteItem;
+        Provider.of<Deliveries>(context, listen: false).toDeliveryCollectItems;
+//    await Provider.of<Deliveries>(context, listen: false)
+//        .addInitialWasteCart(loadedCollect.collect_list, true);
+//    loadedCollect =
+//        Provider.of<Deliveries>(context, listen: false).requestWasteItem;
     setState(() {
       _isLoading = false;
     });
@@ -112,14 +116,17 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
     setState(() {
       _isLoading = true;
     });
-    wasteCartItems = Provider.of<Wastes>(context, listen: false).wasteCartItems;
+    loadedCollect =
+        Provider.of<Deliveries>(context, listen: false).toDeliveryCollectItems;
+//    wasteCartItems = Provider.of<Deliveries>(context, listen: false).wasteCartItems;
     totalPrice = 0;
     totalWeight = 0;
-    if (wasteCartItems.length > 0) {
-      for (int i = 0; i < wasteCartItems.length; i++) {
-        totalPrice = totalPrice + double.parse(wasteCartItems[i].estimated_price);
+    if (loadedCollect.length > 0) {
+      for (int i = 0; i < loadedCollect.length; i++) {
+        totalPrice = totalPrice + int.parse(loadedCollect[i].estimated_price);
 
-        totalWeight = totalWeight + double.parse(wasteCartItems[i].exact_weight);
+        totalWeight =
+            totalWeight + int.parse(loadedCollect[i].estimated_weight);
       }
     }
     changeNumberAnimation(double.parse(totalPrice.toString()));
@@ -175,61 +182,85 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
     _totalPriceController.forward(from: 0.0);
   }
 
-  Future<void> createRequest(BuildContext context, bool collected) async {
+//  Future<void> createRequest(BuildContext context, bool collected) async {
+//    setState(() {
+//      _isLoading = true;
+//    });
+//
+//    List<Collect> collectList = [];
+//    for (int i = 0; i < wasteCartItems.length; i++) {
+//      if (wasteCartItems[i].isAdded) {
+//        collectList.add(
+//          Collect(
+//            estimated_weight: wasteCartItems[i].estimated_weight,
+//            estimated_price: wasteCartItems[i].estimated_price,
+//            exact_weight: wasteCartItems[i].exact_weight,
+//            exact_price: wasteCartItems[i].exact_price,
+//            pasmand: Pasmand(
+//                id: wasteCartItems[i].pasmand.id,
+//                post_title: wasteCartItems[i].pasmand.post_title),
+//          ),
+//        );
+//      } else if (!wasteCartItems[i].isAdded) {
+//        collectList.add(
+//          Collect(
+//            estimated_weight: wasteCartItems[i].estimated_weight,
+//            estimated_price: wasteCartItems[i].estimated_price,
+//            exact_weight: '0',
+//            exact_price: '0',
+//            pasmand: Pasmand(
+//                id: wasteCartItems[i].pasmand.id,
+//                post_title: wasteCartItems[i].pasmand.post_title),
+//          ),
+//        );
+//      }
+//    }
+//
+//    requestWaste = RequestWaste(
+//      collect_list: collectList,
+//      collected: collected,
+//    );
+//
+//    setState(() {
+//      _isLoading = false;
+//    });
+//  }
+//
+  Future<void> sendRequest(
+    int storeId,
+  ) async {
     setState(() {
       _isLoading = true;
     });
-
-    List<Collect> collectList = [];
-    for (int i = 0; i < wasteCartItems.length; i++) {
-      if (wasteCartItems[i].isAdded) {
-        collectList.add(
-          Collect(
-            estimated_weight: wasteCartItems[i].estimated_weight,
-            estimated_price: wasteCartItems[i].estimated_price,
-            exact_weight: wasteCartItems[i].exact_weight,
-            exact_price: wasteCartItems[i].exact_price,
-            pasmand: Pasmand(
-                id: wasteCartItems[i].pasmand.id,
-                post_title: wasteCartItems[i].pasmand.post_title),
-          ),
-        );
-      } else if (!wasteCartItems[i].isAdded) {
-        collectList.add(
-          Collect(
-            estimated_weight: wasteCartItems[i].estimated_weight,
-            estimated_price: wasteCartItems[i].estimated_price,
-            exact_weight: '0',
-            exact_price: '0',
-            pasmand: Pasmand(
-                id: wasteCartItems[i].pasmand.id,
-                post_title: wasteCartItems[i].pasmand.post_title),
-          ),
-        );
-      }
-    }
-
-    requestWaste = RequestWaste(
-      collect_list: collectList,
-      collected: collected,
-    );
+    bool isLogin = Provider.of<Auth>(context, listen: false).isAuth;
+    await Provider.of<Deliveries>(context, listen: false)
+        .sendRequest(
+      storeId,
+      isLogin,
+    )
+        .then((value) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          NavigationBottomScreen.routeName, (Route<dynamic> route) => false);
+      _showSenddialog();
+    });
+    print(
+        'didChangeDependenciesdidChangeDependenciesdidChangeDependenciesdidChangeDependencies');
 
     setState(() {
       _isLoading = false;
     });
   }
 
-  Future<void> sendRequest(BuildContext context, bool isLogin) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    await Provider.of<Wastes>(context, listen: false)
-        .sendRequest(requestWaste, isLogin, loadedCollect.id);
-
-    setState(() {
-      _isLoading = false;
-    });
+  void _showSendDeliveryDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => CustomDialogSendDelivery(
+        totalWallet: 1000,
+        function: (int storeId) {
+          sendRequest(storeId);
+        },
+      ),
+    );
   }
 
   @override
@@ -239,7 +270,6 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
     var textScaleFactor = MediaQuery.of(context).textScaleFactor;
     var currencyFormat = intl.NumberFormat.decimalPattern();
     bool isLogin = Provider.of<Auth>(context, listen: false).isAuth;
-    bool isCompleted = Provider.of<Auth>(context, listen: false).isCompleted;
     return Scaffold(
       backgroundColor: AppTheme.bg,
       appBar: AppBar(
@@ -291,9 +321,8 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
                                       ),
                                       Text(
                                         EnArConvertor()
-                                            .replaceArNumber(wasteCartItems
-                                                .length
-                                                .toString())
+                                            .replaceArNumber(
+                                                loadedCollect.length.toString())
                                             .toString(),
                                         style: TextStyle(
                                           color: AppTheme.h1,
@@ -398,9 +427,9 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: Consumer<Wastes>(
+                          child: Consumer<Deliveries>(
                             builder: (_, value, ch) => value
-                                        .wasteCartItems.length !=
+                                        .toDeliveryCollectItems.length !=
                                     0
                                 ? Container(
                                     decoration: BoxDecoration(
@@ -417,17 +446,6 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
                                             children: <Widget>[
                                               Expanded(
                                                 child: Text(
-                                                  'وضعیت',
-                                                  style: TextStyle(
-                                                    color: AppTheme.grey,
-                                                    fontFamily: 'Iransans',
-                                                    fontSize:
-                                                        textScaleFactor * 12,
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
                                                   'نوع',
                                                   style: TextStyle(
                                                     color: AppTheme.grey,
@@ -435,28 +453,31 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
                                                     fontSize:
                                                         textScaleFactor * 12,
                                                   ),
+                                                  textAlign: TextAlign.center,
                                                 ),
                                               ),
                                               Expanded(
                                                 child: Text(
-                                                  'وزن مشتری',
+                                                  'وزن(کیلوگرم) ',
                                                   style: TextStyle(
                                                     color: AppTheme.grey,
                                                     fontFamily: 'Iransans',
                                                     fontSize:
                                                         textScaleFactor * 12,
                                                   ),
+                                                  textAlign: TextAlign.center,
                                                 ),
                                               ),
                                               Expanded(
                                                 child: Text(
-                                                  'وزن تحویلی',
+                                                  'قیمت(تومان)',
                                                   style: TextStyle(
                                                     color: AppTheme.grey,
                                                     fontFamily: 'Iransans',
                                                     fontSize:
                                                         textScaleFactor * 12,
                                                   ),
+                                                  textAlign: TextAlign.center,
                                                 ),
                                               ),
                                             ],
@@ -473,12 +494,12 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
 //                                        shrinkWrap: true,
 //                                        physics:
 //                                            const NeverScrollableScrollPhysics(),
-                                            itemCount:
-                                                value.wasteCartItems.length,
+                                            itemCount: value
+                                                .toDeliveryCollectItems.length,
                                             itemBuilder: (ctx, i) =>
-                                                CollectDetailItem(
-                                              wasteItem:
-                                                  value.wasteCartItems[i],
+                                                CollectDeliveryDetailItem(
+                                              wasteItem: value
+                                                  .toDeliveryCollectItems[i],
                                               function: getWasteItems,
                                             ),
                                           ),
@@ -516,123 +537,54 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
                               );
                             },
                           )
-                        : Column(
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () async {
-                                  SnackBar addToCartSnackBar = SnackBar(
-                                    content: Text(
-                                      'قبلا جمع آوری شده است!',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 14.0,
-                                      ),
-                                    ),
-                                    action: SnackBarAction(
-                                      label: 'متوجه شدم',
-                                      onPressed: () {
-                                        // Some code to undo the change.
-                                      },
-                                    ),
-                                  );
-                                  if (loadedCollect.status.slug == 'cancel' ||
-                                      loadedCollect.status.slug ==
-                                          'collected') {
-                                    Scaffold.of(context)
-                                        .showSnackBar(addToCartSnackBar);
-                                  } else if (!isLogin) {
-                                    _showLogindialog();
-                                  } else {
-                                    if (isCompleted) {
-                                      await createRequest(context, true).then(
-                                        (value) =>
-                                            sendRequest(context, isLogin).then(
-                                          (value) {
-                                            Navigator.of(context)
-                                                .pushNamedAndRemoveUntil(
-                                                    NavigationBottomScreen
-                                                        .routeName,
-                                                    (Route<dynamic> route) =>
-                                                        false);
-                                          },
-                                        ),
-                                      );
-                                      _showSenddialog();
-                                    } else {
-                                      _showCompletedialog();
-                                    }
-                                  }
-                                },
-                                child: ButtonBottom(
-                                  width: deviceWidth * 0.9,
-                                  height: deviceWidth * 0.14,
-                                  text: 'تایید',
-                                  isActive: loadedCollect.status.slug !=
-                                          'cancel' &&
-                                      loadedCollect.status.slug != 'collected',
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  SnackBar addToCartSnackBar = SnackBar(
-                                    content: Text(
-                                      'قبلا جمع آوری شده است!',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 14.0,
-                                      ),
-                                    ),
-                                    action: SnackBarAction(
-                                      label: 'متوجه شدم',
-                                      onPressed: () {
-                                        // Some code to undo the change.
-                                      },
-                                    ),
-                                  );
-                                  if (loadedCollect.status.slug == 'cancel' ||
-                                      loadedCollect.status.slug ==
-                                          'collected') {
-                                    Scaffold.of(context)
-                                        .showSnackBar(addToCartSnackBar);
-                                  } else if (!isLogin) {
-                                    _showLogindialog();
-                                  } else {
-                                    if (isCompleted) {
-                                      createRequest(context, false).then(
-                                          (value) =>
-                                              sendRequest(context, isLogin));
-                                    } else {
-                                      _showCompletedialog();
-                                    }
-                                  }
-                                },
-                                child: Container(
-                                  width: deviceWidth * 0.9,
-                                  height: deviceWidth * 0.14,
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(Icons.block),
-                                        Text(
-                                          'عدم دسترسی',
-                                          style: TextStyle(
-                                            color: AppTheme.black,
-                                            fontFamily: 'Iransans',
-                                            fontSize: textScaleFactor * 16.0,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
+                        : InkWell(
+                            onTap: () async {
+                              SnackBar addToCartSnackBar = SnackBar(
+                                content: Text(
+                                  'قبلا جمع آوری شده است!',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Iransans',
+                                    fontSize: textScaleFactor * 14.0,
                                   ),
                                 ),
-                              ),
-                            ],
+                                action: SnackBarAction(
+                                  label: 'متوجه شدم',
+                                  onPressed: () {
+                                    // Some code to undo the change.
+                                  },
+                                ),
+                              );
+                              if (loadedCollect.isEmpty) {
+                                Scaffold.of(context)
+                                    .showSnackBar(addToCartSnackBar);
+                              } else if (!isLogin) {
+                                _showLogindialog();
+                              } else {
+                                _showSendDeliveryDialog();
+//                                await createRequest(context, true).then(
+//                                  (value) =>
+//                                      sendRequest(context, isLogin).then(
+//                                    (value) {
+//                                      Navigator.of(context)
+//                                          .pushNamedAndRemoveUntil(
+//                                              NavigationBottomScreen
+//                                                  .routeName,
+//                                              (Route<dynamic> route) =>
+//                                                  false);
+//                                    },
+//                                  ),
+//                                );
+//                                _showSenddialog();
+
+                              }
+                            },
+                            child: ButtonBottom(
+                              width: deviceWidth * 0.9,
+                              height: deviceWidth * 0.14,
+                              text: 'تایید',
+                              isActive: loadedCollect.isNotEmpty,
+                            ),
                           ),
                   ),
                   Positioned(

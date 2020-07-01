@@ -34,51 +34,123 @@ class CollectItemCollectsScreen extends StatelessWidget {
               child: Container(
                 decoration: AppTheme.listItemBox,
                 height: constraints.maxHeight,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      flex: 2,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Expanded(
-                            child: Row(
+                            flex: 6,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Expanded(
-                                  child: Icon(
-                                    Icons.date_range,
-                                    color: AppTheme.grey,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Icon(
+                                          Icons.date_range,
+                                          color: AppTheme.primary,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          collect.collect_date.day,
+                                          maxLines: 1,
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            color: AppTheme.black,
+                                            fontFamily: 'Iransans',
+                                            fontSize: textScaleFactor * 12.0,
+                                          ),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Expanded(
+                                        child: Icon(
+                                          Icons.av_timer,
+                                          color: AppTheme.primary,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          collect.collect_date.time,
+                                          maxLines: 1,
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            color: AppTheme.black,
+                                            fontFamily: 'Iransans',
+                                            fontSize: textScaleFactor * 14.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Expanded(
-                                  child: Text(
-                                    collect.collect_day,
-                                    maxLines: 1,
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      color: AppTheme.black,
-                                      fontFamily: 'Iransans',
-                                      fontSize: textScaleFactor * 12.0,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                Expanded(
-                                  child: Icon(
-                                    Icons.av_timer,
-                                    color: AppTheme.grey,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    collect.collect_hours,
-                                    maxLines: 1,
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      color: AppTheme.black,
-                                      fontFamily: 'Iransans',
-                                      fontSize: textScaleFactor * 14.0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            EnArConvertor().replaceArNumber(
+                                                collect.total_collects_weight.estimated),
+                                            maxLines: 1,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: AppTheme.black,
+                                              fontFamily: 'Iransans',
+                                              fontSize: textScaleFactor * 16.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            'کیلوگرم',
+                                            maxLines: 1,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: AppTheme.grey,
+                                              fontFamily: 'Iransans',
+                                              fontSize: textScaleFactor * 10.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text(
+                                            EnArConvertor().replaceArNumber(
+                                                currencyFormat
+                                                    .format(double.parse(
+                                                        collect.total_collects_price.estimated))
+                                                    .toString()),
+                                            maxLines: 1,
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color: AppTheme.black,
+                                              fontFamily: 'Iransans',
+                                              fontSize: textScaleFactor * 14.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            ' تومان',
+                                            maxLines: 1,
+                                            textAlign: TextAlign.right,
+                                            style: TextStyle(
+                                              color: AppTheme.grey,
+                                              fontFamily: 'Iransans',
+                                              fontSize: textScaleFactor * 11.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -86,65 +158,30 @@ class CollectItemCollectsScreen extends StatelessWidget {
                             ),
                           ),
                           Expanded(
+                            flex: 3,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Row(
+                              child: Column(
                                 children: <Widget>[
                                   Expanded(
-                                    child: Text(
-                                      EnArConvertor().replaceArNumber(
-                                          collect.total_weight.estimated),
-                                      maxLines: 1,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: AppTheme.black,
-                                        fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 16.0,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      'کیلوگرم',
-                                      maxLines: 1,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: AppTheme.grey,
-                                        fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 10.0,
-                                      ),
-                                    ),
-                                  ),
+                                      child: Icon(
+                                        Icons.timer,
+                                        color: AppTheme.primary,
+                                      )),
                                   Spacer(),
                                   Expanded(
-                                    flex: 2,
                                     child: Text(
-                                      EnArConvertor().replaceArNumber(
-                                          currencyFormat
-                                              .format(double.parse(
-                                                  collect.total_price.estimated))
-                                              .toString()),
-                                      maxLines: 1,
-                                      textAlign: TextAlign.left,
+                                      collect.status.name,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.right,
                                       style: TextStyle(
                                         color: AppTheme.black,
                                         fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 14.0,
+                                        fontSize: textScaleFactor * 13.0,
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      ' تومان',
-                                      maxLines: 1,
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                        color: AppTheme.grey,
-                                        fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 11.0,
-                                      ),
-                                    ),
-                                  ),
+                                  )
                                 ],
                               ),
                             ),
@@ -153,32 +190,28 @@ class CollectItemCollectsScreen extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      flex: 3,
-                      child: Column(
+                      flex: 1,
+                      child: Row(
                         children: <Widget>[
-                          Expanded(
-                              child: Padding(
-                            padding: const EdgeInsets.all(15.0),
+                          Padding(
+                            padding: const EdgeInsets.only(right:10.0,left: 8,bottom: 8),
                             child: Icon(
-                              Icons.timer,
-                              size: 35,
+                              Icons.location_on,
                               color: AppTheme.primary,
                             ),
-                          )),
-                          Spacer(),
-                          Expanded(
-                            child: Text(
-                              collect.status.name,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                color: AppTheme.black,
-                                fontFamily: 'Iransans',
-                                fontSize: textScaleFactor * 13.0,
-                              ),
+                          ),
+                          Text(
+                            collect.address_data.address,
+                            maxLines: 1,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: AppTheme.black,
+                              fontFamily: 'Iransans',
+                              fontSize: textScaleFactor * 12.0,
                             ),
-                          )
+                          ),
+                          Spacer(),
+
                         ],
                       ),
                     ),
