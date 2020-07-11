@@ -116,32 +116,32 @@ class _CustomerDetailInfoScreenState extends State<CustomerDetailInfoScreen> {
                               ),
                               textAlign: TextAlign.right,
                             ),
-                            FittedBox(
-                              child: FlatButton(
-                                color: AppTheme.primary,
-                                onPressed: () {
-                                  Navigator.of(context).pushReplacementNamed(
-                                      CustomerDetailInfoEditScreen.routeName);
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.edit,
-                                      color: Colors.white,
-                                      size: 16,
-                                    ),
-                                    Text(
-                                      ' ویرایش',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 14.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+//                            FittedBox(
+//                              child: FlatButton(
+//                                color: AppTheme.primary,
+//                                onPressed: () {
+//                                  Navigator.of(context).pushReplacementNamed(
+//                                      CustomerDetailInfoEditScreen.routeName);
+//                                },
+//                                child: Row(
+//                                  children: <Widget>[
+//                                    Icon(
+//                                      Icons.edit,
+//                                      color: Colors.white,
+//                                      size: 16,
+//                                    ),
+//                                    Text(
+//                                      ' ویرایش',
+//                                      style: TextStyle(
+//                                        color: Colors.white,
+//                                        fontFamily: 'Iransans',
+//                                        fontSize: textScaleFactor * 14.0,
+//                                      ),
+//                                    ),
+//                                  ],
+//                                ),
+//                              ),
+//                            ),
                           ],
                         ),
                         Container(
@@ -209,6 +209,37 @@ class _CustomerDetailInfoScreenState extends State<CustomerDetailInfoScreen> {
                                 bgColor: Colors.white,
                                 iconColor: Color(0xff4392F1),
                               ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.white,
+                        ),
+
+                        Container(
+                          child: ListView(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            children: <Widget>[
+                              InfoItem(
+                                title: 'نوع خودرو',
+                                text: customer.car.name,
+                                bgColor: Colors.white,
+                                iconColor: Color(0xffA67FEC),
+                              ),
+                              InfoItem(
+                                title: 'رنگ خودرو',
+                                text: customer.car_color.name ,
+                                bgColor: Colors.white,
+                                iconColor: Color(0xff4392F1),
+                              ),
+                              InfoItem(
+                                title: 'پلاک',
+                                text: customer.car_number,
+                                bgColor: Colors.white,
+                                iconColor: Color(0xff4392F1),
+                              ),
+
                             ],
                           ),
                         ),

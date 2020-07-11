@@ -10,8 +10,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="tamizshahrdriver"
-        android:icon="@mipmap/ic_launcher">
+        android:label="تمیزشهر راننده"
+        android:icon="@drawable/tamizshahr_ic">
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCRlaVGOEihxi7V69rWNNF_37i6z4wRZDM"/>
         <activity

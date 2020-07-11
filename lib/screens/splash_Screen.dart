@@ -29,12 +29,12 @@ class _SplashScreensState extends State<SplashScreens> {
       seconds: 3,
       navigateAfterSeconds: new NavigationBottomScreen(),
       title: new Text(
-        ' سامانه مدیرت پسماند',
+        'تمیزشهر \n اپلیکیشن راننده',
         textAlign: TextAlign.center,
         style: new TextStyle(
           fontFamily: 'BFarnaz',
           fontSize: MediaQuery.of(context).textScaleFactor * 30,
-          color: Colors.black,
+          color: AppTheme.black,
           shadows: <Shadow>[
             Shadow(
               offset: Offset(0.0, 0.0),

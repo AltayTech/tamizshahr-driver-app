@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
+
 import '../models/transaction.dart';
 import '../provider/app_theme.dart';
-
 import 'en_to_ar_number_convertor.dart';
 
 class TransactionItemTransactionsScreen extends StatelessWidget {
@@ -17,12 +17,12 @@ class TransactionItemTransactionsScreen extends StatelessWidget {
     var currencyFormat = intl.NumberFormat.decimalPattern();
 
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(4.0),
       child: Container(
         height: widthDevice * 0.18,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: AppTheme.bg,
+          color: AppTheme.white,
         ),
         child: LayoutBuilder(
           builder: (ctx, constraints) {
@@ -72,11 +72,14 @@ class TransactionItemTransactionsScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         EnArConvertor().replaceArNumber(currencyFormat
-                            .format(double.parse(transaction.money))
+                            .format(
+                                double.parse(transaction.money).roundToDouble())
                             .toString()),
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color:transaction.operation=='برداشت'? Colors.red:AppTheme.primary,
+                          color: transaction.operation == 'برداشت'
+                              ? Colors.red
+                              : AppTheme.primary,
                           fontFamily: 'Iransans',
                           fontSize: textScaleFactor * 17.0,
                         ),

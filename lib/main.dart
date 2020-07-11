@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tamizshahrdriver/provider/clearings.dart';
+import 'package:tamizshahrdriver/screens/delivery_detail_screen.dart';
 import 'package:tamizshahrdriver/screens/statistics_screen.dart';
 
 import './provider/auth.dart';
@@ -13,7 +15,6 @@ import './screens/home_screen.dart';
 import './screens/map_screen.dart';
 import './screens/navigation_bottom_screen.dart';
 import './screens/wallet_screen.dart';
-import './screens/waste_request_send_screen.dart';
 import 'classes/strings.dart';
 import 'provider/customer_info.dart';
 import 'provider/deliveries.dart';
@@ -44,6 +45,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => Deliveries(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Clearings(),
         ),
       ],
       child: MaterialApp(
@@ -87,13 +91,13 @@ class MyApp extends StatelessWidget {
           CustomerUserInfoScreen.routeName: (ctx) => CustomerUserInfoScreen(),
           GuideScreen.routeName: (ctx) => GuideScreen(),
           MapScreen.routeName: (ctx) => MapScreen(),
-          WasteRequestSendScreen.routeName: (ctx) => WasteRequestSendScreen(),
           CollectListScreen.routeName: (ctx) => CollectListScreen(),
           WalletScreen.routeName: (ctx) => WalletScreen(),
           CollectDetailScreen.routeName: (ctx) => CollectDetailScreen(),
           ClearScreen.routeName: (ctx) => ClearScreen(),
           StatisticsScreen.routeName: (ctx) => StatisticsScreen(),
           SendDeliveryScreen.routeName: (ctx) => SendDeliveryScreen(),
+          DeliveryDetailScreen.routeName: (ctx) => DeliveryDetailScreen(),
         },
       ),
     );

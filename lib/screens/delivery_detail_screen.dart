@@ -10,7 +10,6 @@ import 'package:tamizshahrdriver/provider/deliveries.dart';
 import 'package:tamizshahrdriver/widgets/collect_delivery_detail_item.dart';
 import 'package:tamizshahrdriver/widgets/custom_dialog_send_delivery.dart';
 import 'package:tamizshahrdriver/widgets/custom_dialog_send_request.dart';
-import 'package:tamizshahrdriver/widgets/header_total.dart';
 
 import '../provider/app_theme.dart';
 import '../provider/auth.dart';
@@ -21,21 +20,22 @@ import '../widgets/en_to_ar_number_convertor.dart';
 import '../widgets/main_drawer.dart';
 import 'navigation_bottom_screen.dart';
 
-class SendDeliveryScreen extends StatefulWidget {
-  static const routeName = '/SendDeliveryScreen';
+class DeliveryDetailScreen extends StatefulWidget {
+  static const routeName = '/DeliveryDetailScreen';
 
   @override
-  _SendDeliveryScreenState createState() => _SendDeliveryScreenState();
+  _DeliveryDetailScreenState createState() => _DeliveryDetailScreenState();
 }
 
-class _SendDeliveryScreenState extends State<SendDeliveryScreen>
+class _DeliveryDetailScreenState extends State<DeliveryDetailScreen>
     with TickerProviderStateMixin {
 //  List<WasteCart> wasteCartItems = [];
   bool _isInit = true;
 
   var _isLoading = true;
-  double totalPrice = 0;
-  double totalWeight = 0.0;
+  int totalPrice = 0;
+  int totalWeight = 0;
+  int totalPricePure = 0;
   List<Collect> loadedCollect = [];
 
   RequestWaste requestWaste;
@@ -123,11 +123,10 @@ class _SendDeliveryScreenState extends State<SendDeliveryScreen>
     totalWeight = 0;
     if (loadedCollect.length > 0) {
       for (int i = 0; i < loadedCollect.length; i++) {
-        totalPrice =
-            totalPrice + double.parse(loadedCollect[i].estimated_price);
+        totalPrice = totalPrice + int.parse(loadedCollect[i].estimated_price);
 
         totalWeight =
-            totalWeight + double.parse(loadedCollect[i].estimated_weight);
+            totalWeight + int.parse(loadedCollect[i].estimated_weight);
       }
     }
     changeNumberAnimation(double.parse(totalPrice.toString()));
@@ -298,15 +297,134 @@ class _SendDeliveryScreenState extends State<SendDeliveryScreen>
                   SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        HeaderTotal(
-                          totalNumber: loadedCollect
-                              .length,
-                          totalPrice: totalPrice,
-                          totalWeight: totalWeight,
-                          totalPriceController: _totalPriceController,
-                          totalPriceAnimation: _totalPriceAnimation,
+                        Container(
+                          height: deviceHeight * 0.15,
+                          decoration: BoxDecoration(
+                              color: AppTheme.white,
+                              borderRadius: BorderRadius.circular(5),
+                              border:
+                                  Border.all(color: Colors.grey, width: 0.2)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Icon(
+                                          Icons.restore_from_trash,
+                                          color: Colors.red,
+                                          size: 40,
+                                        ),
+                                      ),
+                                      Text(
+                                        EnArConvertor()
+                                            .replaceArNumber(
+                                                loadedCollect.length.toString())
+                                            .toString(),
+                                        style: TextStyle(
+                                          color: AppTheme.h1,
+                                          fontFamily: 'Iransans',
+                                          fontSize: textScaleFactor * 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        'تعداد ',
+                                        style: TextStyle(
+                                          color: AppTheme.grey,
+                                          fontFamily: 'Iransans',
+                                          fontSize: textScaleFactor * 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Icon(
+                                          Icons.monetization_on,
+                                          color: AppTheme.primary,
+                                          size: 40,
+                                        ),
+                                      ),
+                                      AnimatedBuilder(
+                                        animation: _totalPriceAnimation,
+                                        builder: (BuildContext context,
+                                            Widget child) {
+                                          return new Text(
+                                            totalPrice.toString().isNotEmpty
+                                                ? EnArConvertor()
+                                                    .replaceArNumber(
+                                                        currencyFormat
+                                                            .format(
+                                                                double.parse(
+                                                              _totalPriceAnimation
+                                                                  .value
+                                                                  .toStringAsFixed(
+                                                                      0),
+                                                            ))
+                                                            .toString())
+                                                : EnArConvertor()
+                                                    .replaceArNumber('0'),
+                                            style: TextStyle(
+                                              color: AppTheme.h1,
+                                              fontFamily: 'Iransans',
+                                              fontSize: textScaleFactor * 18,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      Text(
+                                        'تومان ',
+                                        style: TextStyle(
+                                          color: AppTheme.grey,
+                                          fontFamily: 'Iransans',
+                                          fontSize: textScaleFactor * 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Icon(
+                                          Icons.av_timer,
+                                          color: Colors.blue,
+                                          size: 40,
+                                        ),
+                                      ),
+                                      Text(
+                                        EnArConvertor()
+                                            .replaceArNumber(
+                                                totalWeight.toString())
+                                            .toString(),
+                                        style: TextStyle(
+                                          color: AppTheme.h1,
+                                          fontFamily: 'Iransans',
+                                          fontSize: textScaleFactor * 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        'کیلوگرم ',
+                                        style: TextStyle(
+                                          color: AppTheme.grey,
+                                          fontFamily: 'Iransans',
+                                          fontSize: textScaleFactor * 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
                           child: Consumer<Deliveries>(
@@ -321,8 +439,7 @@ class _SendDeliveryScreenState extends State<SendDeliveryScreen>
                                     child: Column(
                                       children: <Widget>[
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 15.0),
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceEvenly,
@@ -391,9 +508,9 @@ class _SendDeliveryScreenState extends State<SendDeliveryScreen>
                                     ),
                                   )
                                 : Container(
-                                    height: deviceHeight * 0.5,
+                                    height: deviceHeight * 0.7,
                                     child: Center(
-                                      child: Text('پسماندی برای تحویل وجود ندارد'),
+                                      child: Text('پسماندی اضافه نشده است'),
                                     ),
                                   ),
                           ),
@@ -465,7 +582,7 @@ class _SendDeliveryScreenState extends State<SendDeliveryScreen>
                             child: ButtonBottom(
                               width: deviceWidth * 0.9,
                               height: deviceWidth * 0.14,
-                              text: 'تحویل',
+                              text: 'تایید',
                               isActive: loadedCollect.isNotEmpty,
                             ),
                           ),

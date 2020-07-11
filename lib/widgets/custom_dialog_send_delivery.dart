@@ -86,10 +86,11 @@ class _CustomDialogSendDeliveryState extends State<CustomDialogSendDelivery> {
                     width: deviceWidth * 0.78,
                     child: Text(
                       'انتخاب انبار',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: AppTheme.h1,
                         fontFamily: 'Iransans',
-                        fontSize: textScaleFactor * 14.0,
+                        fontSize: textScaleFactor * 16.0,
                       ),
                     ),
                   ),

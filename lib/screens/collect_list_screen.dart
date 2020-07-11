@@ -186,14 +186,14 @@ class _CollectListScreenState extends State<CollectListScreen>
               : Padding(
                   padding: EdgeInsets.symmetric(
                       vertical: deviceHeight * 0.0,
-                      horizontal: deviceWidth * 0.03),
+                      horizontal: deviceWidth * 0.0),
                   child: Stack(
                     children: <Widget>[
                       Column(
                         children: <Widget>[
                           Container(
                             decoration: BoxDecoration(
-                                color: AppTheme.white,
+                                color: AppTheme.bg,
                                 boxShadow: [
                                   BoxShadow(
                                     color: AppTheme.primary.withOpacity(0.08),
@@ -314,7 +314,7 @@ class _CollectListScreenState extends State<CollectListScreen>
                                   ),
                                   Container(
                                     width: double.infinity,
-                                    height: deviceHeight * 0.68,
+                                    height: deviceHeight * 0.55,
                                     child: ListView.builder(
                                       controller: _scrollController,
                                       scrollDirection: Axis.vertical,

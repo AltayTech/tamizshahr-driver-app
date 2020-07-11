@@ -12,10 +12,12 @@ import 'en_to_ar_number_convertor.dart';
 class CollectDetailItem extends StatefulWidget {
   final WasteCart wasteItem;
   final Function function;
+  final bool isNotActive;
 
   CollectDetailItem({
     this.wasteItem,
     this.function,
+    this.isNotActive,
   });
 
   @override
@@ -36,7 +38,10 @@ class _CollectDetailItemState extends State<CollectDetailItem> {
     if (_isInit) {
       _isLoading = false;
 
-      productWeight = int.parse(widget.wasteItem.exact_weight);
+      productWeight = int.parse(double.parse(widget.wasteItem.exact_weight).toStringAsFixed(0));
+//      setState(() {
+//
+//      });
 //      changeNumberAnimation(double.parse(
 //              getPrice(widget.wasteItem.prices, widget.wasteItem.weight)) *
 //          widget.wasteItem.weight);
@@ -142,11 +147,12 @@ print(totalWeight);
                   child: Checkbox(
                     value: widget.wasteItem.isAdded,
                     onChanged: (value) {
+                      if(!widget.isNotActive){
                       if (widget.wasteItem.isAdded) {
                         updateItem(widget.wasteItem.exact_weight, false);
                       } else {
                         updateItem((widget.wasteItem.exact_weight), true);
-                      }
+                      }}
                     },
                   ),
                 ),
@@ -201,7 +207,9 @@ print(totalWeight);
                             Expanded(
                                 child: InkWell(
                               onTap: () async {
-                                productWeightFraction =
+    if(!widget.isNotActive){
+
+    productWeightFraction =
                                     productWeightFraction + 50;
                                 if (productWeightFraction >= 1000) {
                                   productWeightFraction =
@@ -222,10 +230,11 @@ print(totalWeight);
 //                                                                    .weight)) *
 //                                                            widget.wasteItem
 //                                                                .weight);
-                                widget.function();
+                                widget.function();}
                               },
                               onDoubleTap: () async {
-                                productWeightFraction =
+    if(!widget.isNotActive){
+    productWeightFraction =
                                     productWeightFraction + 200;
                                 if (productWeightFraction >= 1000) {
                                   productWeightFraction =
@@ -246,12 +255,12 @@ print(totalWeight);
 //                                                                    .weight)) *
 //                                                            widget.wasteItem
 //                                                                .weight);
-                                widget.function();
+                                widget.function();}
                               },
                               child: Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: AppTheme.accent,
+                                    color:!widget.isNotActive? AppTheme.accent.withOpacity(0.7):AppTheme.grey,
                                   ),
                                   child: Icon(
                                     Icons.add,
@@ -281,7 +290,8 @@ print(totalWeight);
                             Expanded(
                               child: InkWell(
                                 onTap: () {
-                                  productWeightFraction =
+    if(!widget.isNotActive){
+    productWeightFraction =
                                       productWeightFraction - 50;
                                   if (productWeightFraction < 0) {
                                     productWeightFraction = 0;
@@ -304,10 +314,11 @@ print(totalWeight);
 //                                                                widget.wasteItem
 //                                                                    .weight);
 
-                                  widget.function();
+                                  widget.function();}
                                 },
                                 onDoubleTap: () async {
-                                  productWeightFraction =
+    if(!widget.isNotActive){
+    productWeightFraction =
                                       productWeightFraction - 20;
                                   if (productWeightFraction < 0) {
                                     productWeightFraction = 0;
@@ -330,12 +341,12 @@ print(totalWeight);
 //                                                                widget.wasteItem
 //                                                                    .weight);
 
-                                  widget.function();
+                                  widget.function();}
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: AppTheme.accent,
+                                    color:!widget.isNotActive? AppTheme.accent.withOpacity(0.7):AppTheme.grey,
                                   ),
                                   child: Icon(
                                     Icons.remove,
@@ -356,8 +367,9 @@ print(totalWeight);
                           children: <Widget>[
                             Expanded(
                                 child: InkWell(
-                              onTap: () async {
-                                productWeight = productWeight + 1;
+                              onTap: () async {                      if(!widget.isNotActive){
+
+    productWeight = productWeight + 1;
 
                                 await Provider.of<Wastes>(context,
                                         listen: false)
@@ -374,10 +386,11 @@ print(totalWeight);
 //                                                                    .weight)) *
 //                                                            widget.wasteItem
 //                                                                .weight);
-                                widget.function();
+                                widget.function();}
                               },
                               onDoubleTap: () async {
-                                productWeight = productWeight + 10;
+    if(!widget.isNotActive){
+    productWeight = productWeight + 10;
 
                                 await Provider.of<Wastes>(context,
                                         listen: false)
@@ -394,12 +407,12 @@ print(totalWeight);
 //                                                                    .weight)) *
 //                                                            widget.wasteItem
 //                                                                .weight);
-                                widget.function();
+                                widget.function();}
                               },
                               child: Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: AppTheme.accent,
+                                    color:!widget.isNotActive? AppTheme.accent:AppTheme.grey,
                                   ),
                                   child: Icon(
                                     Icons.add,
@@ -428,7 +441,8 @@ print(totalWeight);
                             Expanded(
                               child: InkWell(
                                 onTap: () {
-                                  if (productWeight > 1) {
+    if(!widget.isNotActive){
+    if (productWeight > 1) {
                                     productWeight = productWeight - 1;
                                     print('productCount' +
                                         productWeight.toString());
@@ -450,10 +464,11 @@ print(totalWeight);
 //                                                                widget.wasteItem
 //                                                                    .weight);
                                   }
-                                  widget.function();
+                                  widget.function();}
                                 },
                                 onDoubleTap: () async {
-                                  if (productWeight > 10) {
+    if(!widget.isNotActive){
+    if (productWeight > 10) {
                                     productWeight = productWeight - 10;
                                     print('productCount' +
                                         productWeight.toString());
@@ -475,12 +490,12 @@ print(totalWeight);
 //                                                                widget.wasteItem
 //                                                                    .weight);
                                   }
-                                  widget.function();
+                                  widget.function();}
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: AppTheme.accent,
+                                    color:!widget.isNotActive? AppTheme.accent:AppTheme.grey,
                                   ),
                                   child: Icon(
                                     Icons.remove,

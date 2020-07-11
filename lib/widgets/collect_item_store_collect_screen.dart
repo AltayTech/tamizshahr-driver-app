@@ -5,10 +5,39 @@ import 'package:provider/provider.dart';
 import 'package:tamizshahrdriver/models/request/delivery_waste_item.dart';
 
 import '../provider/app_theme.dart';
-import '../screens/collect_detail_screen.dart';
 import 'en_to_ar_number_convertor.dart';
 
 class CollectItemStoreCollectsScreen extends StatelessWidget {
+  Widget getStatusIcon(String statusSlug) {
+    Widget icon = Icon(
+      Icons.access_time,
+      color: AppTheme.accent,
+//      size: 35,
+    );
+
+    if (statusSlug == 'delivery_request') {
+      icon = Icon(
+        Icons.access_time,
+        color: AppTheme.accent,
+//        size: 25,
+      );
+    } else if (statusSlug == 'delivery_done') {
+      icon = Icon(
+        Icons.check_circle,
+        color: AppTheme.primary,
+//        size: 35,
+      );
+    } else {
+      icon = Icon(
+        Icons.access_time,
+        color: AppTheme.accent,
+//        size: 35,
+      );
+    }
+
+    return icon;
+  }
+
   @override
   Widget build(BuildContext context) {
     var heightDevice = MediaQuery.of(context).size.height;
@@ -20,76 +49,69 @@ class CollectItemStoreCollectsScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
-        height: widthDevice * 0.29,
+        height: widthDevice * 0.25,
         child: LayoutBuilder(
           builder: (ctx, constraints) {
             return InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed(
-                  CollectDetailScreen.routeName,
-                  arguments: collect.id,
-                );
+//                Navigator.of(context).pushNamed(
+//                  DeliveryDetailScreen.routeName,
+//                  arguments: collect.id,
+//                );
               },
               child: Container(
-                decoration: AppTheme.listItemBox,
+                decoration: AppTheme.listItemBox.copyWith(
+                    color: AppTheme.white,
+                    border: Border.all(color: AppTheme.white)),
                 height: constraints.maxHeight,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
                         children: <Widget>[
                           Expanded(
+                            flex: 2,
                             child: Row(
                               children: <Widget>[
-                                Expanded(
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 8, bottom: 4),
                                   child: Icon(
                                     Icons.date_range,
-                                    color: AppTheme.grey,
+                                    color: AppTheme.primary,
                                   ),
                                 ),
-                                Expanded(
-                                  child: Text(
-                                    collect.collect_date.day,
-                                    maxLines: 1,
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      color: AppTheme.black,
-                                      fontFamily: 'Iransans',
-                                      fontSize: textScaleFactor * 12.0,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                Expanded(
-                                  child: Icon(
-                                    Icons.av_timer,
-                                    color: AppTheme.grey,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    collect.collect_date.time,
-                                    maxLines: 1,
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      color: AppTheme.black,
-                                      fontFamily: 'Iransans',
-                                      fontSize: textScaleFactor * 14.0,
-                                    ),
+                                Text(
+                                  collect.delivery_date,
+                                  maxLines: 1,
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    color: AppTheme.black,
+                                    fontFamily: 'Iransans',
+                                    fontSize: textScaleFactor * 15.0,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                            flex: 1,
+                            child: Center(
+                                child: getStatusIcon(collect.status.slug)),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
                               child: Row(
                                 children: <Widget>[
-                                  Expanded(
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 30, left: 4),
                                     child: Text(
                                       EnArConvertor().replaceArNumber(collect
                                           .total_collects_weight.estimated),
@@ -98,91 +120,73 @@ class CollectItemStoreCollectsScreen extends StatelessWidget {
                                       style: TextStyle(
                                         color: AppTheme.black,
                                         fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 16.0,
+                                        fontSize: textScaleFactor * 15.0,
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Text(
-                                      'کیلوگرم',
-                                      maxLines: 1,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: AppTheme.grey,
-                                        fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 10.0,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      EnArConvertor().replaceArNumber(
-                                          currencyFormat
-                                              .format(double.parse(collect
-                                                  .total_collects_price
-                                                  .estimated))
-                                              .toString()),
-                                      maxLines: 1,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: AppTheme.black,
-                                        fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 14.0,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      ' تومان',
-                                      maxLines: 1,
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                        color: AppTheme.grey,
-                                        fontFamily: 'Iransans',
-                                        fontSize: textScaleFactor * 11.0,
-                                      ),
+                                  Text(
+                                    'کیلوگرم',
+                                    maxLines: 1,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppTheme.grey,
+                                      fontFamily: 'Iransans',
+                                      fontSize: textScaleFactor * 10.0,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                              child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Icon(
-                              Icons.timer,
-                              size: 35,
-                              color: AppTheme.primary,
-                            ),
-                          )),
-                          Spacer(),
-                          Expanded(
-                            child: Text(
-                              collect.status.name,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                color: AppTheme.black,
-                                fontFamily: 'Iransans',
-                                fontSize: textScaleFactor * 13.0,
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    EnArConvertor().replaceArNumber(
+                                        currencyFormat
+                                            .format(double.parse(collect
+                                                .total_collects_price
+                                                .estimated))
+                                            .toString()),
+                                    maxLines: 1,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: AppTheme.black,
+                                      fontFamily: 'Iransans',
+                                      fontSize: textScaleFactor * 15.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    ' تومان',
+                                    maxLines: 1,
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      color: AppTheme.grey,
+                                      fontFamily: 'Iransans',
+                                      fontSize: textScaleFactor * 11.0,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          )
-                        ],
+                            Expanded(
+                              child: Text(
+                                collect.status.name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: AppTheme.black,
+                                  fontFamily: 'Iransans',
+                                  fontSize: textScaleFactor * 12.0,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );

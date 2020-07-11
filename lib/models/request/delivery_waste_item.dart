@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../status.dart';
 import 'collect.dart';
 import 'collect_status.dart';
-import 'collect_time.dart';
 import 'pasmand.dart';
 
 class DeliveryWasteItem with ChangeNotifier {
@@ -16,7 +15,7 @@ class DeliveryWasteItem with ChangeNotifier {
   final Pasmand driver;
   final Pasmand operator;
 
-  final CollectTime collect_date;
+  final String delivery_date;
   final List<Collect> collect_list;
 
   DeliveryWasteItem({
@@ -28,7 +27,7 @@ class DeliveryWasteItem with ChangeNotifier {
     this.store,
     this.driver,
     this.operator,
-    this.collect_date,
+    this.delivery_date,
     this.collect_list,
   });
 
@@ -61,9 +60,9 @@ class DeliveryWasteItem with ChangeNotifier {
       operator: parsedJson['operator'] != null
           ? Pasmand.fromJson(parsedJson['operator'])
           : Pasmand(id: 0, post_title: ''),
-      collect_date: parsedJson['collect_date'] != null
-          ? CollectTime.fromJson(parsedJson['collect_date'])
-          : CollectTime(time: '0', day: '0', collect_done_time: '0'),
+      delivery_date: parsedJson['delivery_date'] != null
+          ? parsedJson['delivery_date']
+          : '',
       collect_list: collectRaw,
     );
   }
@@ -80,8 +79,7 @@ class DeliveryWasteItem with ChangeNotifier {
     Map total_number = this.total_collects_number != null
         ? this.total_collects_number.toJson()
         : null;
-    Map collect_time =
-        this.collect_date != null ? this.collect_date.toJson() : null;
+
 
     List<Map> collect_list = this.collect_list != null
         ? this.collect_list.map((i) => i.toJson()).toList()
@@ -93,7 +91,7 @@ class DeliveryWasteItem with ChangeNotifier {
       'total_price': total_price,
       'total_weight': total_weight,
       'total_number': total_number,
-      'collect_time': collect_time,
+      'delivery_date': delivery_date,
       'collect_list': collect_list,
       'driver': driver,
     };

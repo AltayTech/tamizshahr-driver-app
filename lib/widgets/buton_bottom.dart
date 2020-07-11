@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../provider/app_theme.dart';
 
 class ButtonBottom extends StatelessWidget {
@@ -23,19 +24,19 @@ class ButtonBottom extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 1.0,
-            // has the effect of softening the shadow
-            spreadRadius: 1,
-            // has the effect of extending the shadow
-            offset: Offset(
-              1.0, // horizontal, move right 10
-              1.0, // vertical, move down 10
-            ),
-          )
-        ],
+//        boxShadow: [
+//          BoxShadow(
+//            color: Colors.grey,
+//            blurRadius: 1.0,
+//            // has the effect of softening the shadow
+//            spreadRadius: 1,
+//            // has the effect of extending the shadow
+//            offset: Offset(
+//              1.0, // horizontal, move right 10
+//              1.0, // vertical, move down 10
+//            ),
+//          )
+//        ],
         color: isActive ? AppTheme.primary : AppTheme.grey,
         borderRadius: BorderRadius.circular(5),
       ),
@@ -45,9 +46,8 @@ class ButtonBottom extends StatelessWidget {
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Iransans',
-            fontSize: textScaleFactor * 18.0,
+            fontSize: textScaleFactor * 16.0,
             fontWeight: FontWeight.w600,
-
           ),
           textAlign: TextAlign.center,
         ),

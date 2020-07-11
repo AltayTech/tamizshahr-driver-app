@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tamizshahrdriver/models/error.dart';
 
 import '../models/region.dart';
 import '../models/request/address.dart';
@@ -48,8 +49,9 @@ class Auth with ChangeNotifier {
   String get token => _token;
   Map<String, String> headers = {};
 
-  Future<bool> _authenticate(String urlSegment) async {
+  Future<LoginError> _authenticate(String urlSegment) async {
     print('_authenticate');
+    LoginError message;
 
     final url = Urls.rootUrl + Urls.loginEndPoint + urlSegment;
     print(url);
@@ -60,44 +62,64 @@ class Auth with ChangeNotifier {
 
       final responseData = json.decode(response.body);
       print(responseData);
+      if (response.statusCode == 200) {
+        if (responseData != 'false') {
+          try {
+            _token = responseData['token'];
+            _isFirstLogin = true;
 
-      if (responseData != 'false') {
-        try {
-          _token = responseData['token'];
-          _isFirstLogin = true;
+            final prefs = await SharedPreferences.getInstance();
+            final userData = json.encode(
+              {
+                'token': _token,
+              },
+            );
+            prefs.setString('userData', userData);
+            prefs.setString('token', _token);
+            print(_token);
+            prefs.setString('isLogin', 'true');
+            _isLoggedin = true;
 
+            message = LoginError(code: 'true', message: '');
+          } catch (error) {
+            _isLoggedin = false;
+            message = LoginError(code: 'false', message: '');
+
+            _token = '';
+          }
+        } else {
           final prefs = await SharedPreferences.getInstance();
-          final userData = json.encode(
-            {
-              'token': _token,
-            },
-          );
-          prefs.setString('userData', userData);
+          _isLoggedin = false;
+          message = LoginError(code: 'false', message: '');
+
+          _token = '';
           prefs.setString('token', _token);
           print(_token);
-          prefs.setString('isLogin', 'true');
-          _isLoggedin = true;
+          print('noooo token');
+          prefs.setString('isLogin', 'false');
+        }
+      } else {
+        try {
+          final prefs = await SharedPreferences.getInstance();
+          _isLoggedin = false;
+          message = LoginError(
+              code: responseData['code'], message: responseData['message']);
+
+          _token = '';
+          prefs.setString('token', _token);
+          prefs.setString('isLogin', 'false');
         } catch (error) {
           _isLoggedin = false;
 
           _token = '';
         }
-      } else {
-        final prefs = await SharedPreferences.getInstance();
-        _isLoggedin = false;
-
-        _token = '';
-        prefs.setString('token', _token);
-        print(_token);
-        print('noooo token');
-        prefs.setString('isLogin', 'true');
       }
       notifyListeners();
     } catch (error) {
       print(error.toString());
       throw error;
     }
-    return _isLoggedin;
+    return message;
   }
 
   void updateCookie(http.Response response) {
@@ -113,7 +135,7 @@ class Auth with ChangeNotifier {
     return _authenticate('/send_sms?mobile=$phoneNumber');
   }
 
-  Future<bool> getVerCode(String verificationCode, String phoneNumber) async {
+  Future<LoginError> getVerCode(String verificationCode, String phoneNumber) async {
     return _authenticate(
         '/verify?type=driver&mobile=$phoneNumber&sms=$verificationCode');
   }

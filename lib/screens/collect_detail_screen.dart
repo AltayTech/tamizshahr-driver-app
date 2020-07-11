@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,6 +11,7 @@ import 'package:tamizshahrdriver/models/request/request_waste_item.dart';
 import 'package:tamizshahrdriver/models/request/wasteCart.dart';
 import 'package:tamizshahrdriver/widgets/collect_detail_item.dart';
 import 'package:tamizshahrdriver/widgets/custom_dialog_send_request.dart';
+import 'package:tamizshahrdriver/widgets/header_total.dart';
 
 import '../provider/app_theme.dart';
 import '../provider/auth.dart';
@@ -76,6 +78,8 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
   @override
   void didChangeDependencies() async {
     if (_isInit) {
+      Provider.of<Wastes>(context, listen: false).wasteCartItems = [];
+
       await Provider.of<Auth>(context, listen: false).checkCompleted();
       await searchItems();
 
@@ -99,10 +103,12 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
         .retrieveCollectItem(productId);
     loadedCollect =
         Provider.of<Wastes>(context, listen: false).requestWasteItem;
-    await Provider.of<Wastes>(context, listen: false)
-        .addInitialWasteCart(loadedCollect.collect_list, true);
-    loadedCollect =
-        Provider.of<Wastes>(context, listen: false).requestWasteItem;
+
+    await Provider.of<Wastes>(context, listen: false).addInitialWasteCart(
+        loadedCollect.collect_list,
+        true,
+        loadedCollect.status.slug == 'collected');
+
     setState(() {
       _isLoading = false;
     });
@@ -117,9 +123,11 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
     totalWeight = 0;
     if (wasteCartItems.length > 0) {
       for (int i = 0; i < wasteCartItems.length; i++) {
-        totalPrice = totalPrice + double.parse(wasteCartItems[i].estimated_price);
+        totalPrice =
+            totalPrice + double.parse(wasteCartItems[i].estimated_price);
 
-        totalWeight = totalWeight + double.parse(wasteCartItems[i].exact_weight);
+        totalWeight =
+            totalWeight + double.parse(wasteCartItems[i].exact_weight);
       }
     }
     changeNumberAnimation(double.parse(totalPrice.toString()));
@@ -267,135 +275,16 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
                   SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        Container(
-                          height: deviceHeight * 0.15,
-                          decoration: BoxDecoration(
-                              color: AppTheme.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border:
-                                  Border.all(color: Colors.grey, width: 0.2)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.restore_from_trash,
-                                          color: Colors.red,
-                                          size: 40,
-                                        ),
-                                      ),
-                                      Text(
-                                        EnArConvertor()
-                                            .replaceArNumber(wasteCartItems
-                                                .length
-                                                .toString())
-                                            .toString(),
-                                        style: TextStyle(
-                                          color: AppTheme.h1,
-                                          fontFamily: 'Iransans',
-                                          fontSize: textScaleFactor * 18,
-                                        ),
-                                      ),
-                                      Text(
-                                        'تعداد ',
-                                        style: TextStyle(
-                                          color: AppTheme.grey,
-                                          fontFamily: 'Iransans',
-                                          fontSize: textScaleFactor * 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.monetization_on,
-                                          color: AppTheme.primary,
-                                          size: 40,
-                                        ),
-                                      ),
-                                      AnimatedBuilder(
-                                        animation: _totalPriceAnimation,
-                                        builder: (BuildContext context,
-                                            Widget child) {
-                                          return new Text(
-                                            totalPrice.toString().isNotEmpty
-                                                ? EnArConvertor()
-                                                    .replaceArNumber(
-                                                        currencyFormat
-                                                            .format(
-                                                                double.parse(
-                                                              _totalPriceAnimation
-                                                                  .value
-                                                                  .toStringAsFixed(
-                                                                      0),
-                                                            ))
-                                                            .toString())
-                                                : EnArConvertor()
-                                                    .replaceArNumber('0'),
-                                            style: TextStyle(
-                                              color: AppTheme.h1,
-                                              fontFamily: 'Iransans',
-                                              fontSize: textScaleFactor * 18,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      Text(
-                                        'تومان ',
-                                        style: TextStyle(
-                                          color: AppTheme.grey,
-                                          fontFamily: 'Iransans',
-                                          fontSize: textScaleFactor * 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.av_timer,
-                                          color: Colors.blue,
-                                          size: 40,
-                                        ),
-                                      ),
-                                      Text(
-                                        EnArConvertor()
-                                            .replaceArNumber(
-                                                totalWeight.toString())
-                                            .toString(),
-                                        style: TextStyle(
-                                          color: AppTheme.h1,
-                                          fontFamily: 'Iransans',
-                                          fontSize: textScaleFactor * 18,
-                                        ),
-                                      ),
-                                      Text(
-                                        'کیلوگرم ',
-                                        style: TextStyle(
-                                          color: AppTheme.grey,
-                                          fontFamily: 'Iransans',
-                                          fontSize: textScaleFactor * 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        HeaderTotal(
+                          totalNumber: wasteCartItems
+                              .length,
+                          totalPrice: totalPrice,
+                          totalWeight: totalWeight,
+                          totalPriceController: _totalPriceController,
+                            totalPriceAnimation: _totalPriceAnimation,
                         ),
+
+
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
                           child: Consumer<Wastes>(
@@ -463,7 +352,7 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
                                           ),
                                         ),
                                         Container(
-                                          height: deviceHeight * 0.6,
+                                          height: deviceHeight * 0.5,
                                           decoration: BoxDecoration(
                                             color: AppTheme.white,
                                             borderRadius:
@@ -480,6 +369,9 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
                                               wasteItem:
                                                   value.wasteCartItems[i],
                                               function: getWasteItems,
+                                                  isNotActive:(loadedCollect.status.slug == 'cancel' ||
+                                                      loadedCollect.status.slug ==
+                                                          'collected')
                                             ),
                                           ),
                                         ),
@@ -616,11 +508,18 @@ class _CollectDetailScreenState extends State<CollectDetailScreen>
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: <Widget>[
-                                        Icon(Icons.block),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Icon(
+                                            Icons.block,
+                                            color: AppTheme.grey,
+                                          ),
+                                        ),
                                         Text(
                                           'عدم دسترسی',
                                           style: TextStyle(
-                                            color: AppTheme.black,
+                                            color: AppTheme.grey,
                                             fontFamily: 'Iransans',
                                             fontSize: textScaleFactor * 16.0,
                                             fontWeight: FontWeight.w600,

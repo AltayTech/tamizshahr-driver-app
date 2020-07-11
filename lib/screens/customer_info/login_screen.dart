@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:tamizshahrdriver/models/error.dart';
+import 'package:tamizshahrdriver/widgets/custom_dialog_login_error.dart';
 
 import '../../classes/http_exception.dart';
 import '../../provider/app_theme.dart';
@@ -188,30 +190,19 @@ class _AuthCardState extends State<AuthCard>
           _authData['phoneNumber'],
         );
 
-        print('veriiiii');
-
         _switchAuthMode();
       } else {
-        print('loginmode');
-        // Sign user up
-
         var response =
             await Provider.of<Auth>(context, listen: false).getVerCode(
           _authData['verificationCode'],
           _authData['phoneNumber'],
         );
-        if (response) {
-//          try {
-//            Provider.of<Products>(context, listen: false)
-//                .addShopCartAfterLogin(true);
-//          } catch (error) {
-//            print(error.toString());
-//          }
-
+        print(response);
+        if (response.code == 'true') {
           Navigator.of(context)
               .pushReplacementNamed(NavigationBottomScreen.routeName);
         } else {
-          _showErrorDialog('کد وارد شده صحیح نمیباشد');
+          _showLogindialog(response);
         }
       }
     } on HttpException catch (error) {
@@ -266,6 +257,17 @@ class _AuthCardState extends State<AuthCard>
         _controller.forward();
       });
     }
+  }
+
+  void _showLogindialog(LoginError loginError) {
+    showDialog(
+      context: context,
+      builder: (ctx) => CustomDialogLoginError(
+        title: loginError.code,
+        buttonText: 'خب',
+        description: loginError.message,
+      ),
+    );
   }
 
   @override

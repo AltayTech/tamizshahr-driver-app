@@ -28,14 +28,14 @@ class _CollectDeliveryDetailItemState extends State<CollectDeliveryDetailItem>wi
 
   var _isLoading = true;
 
-  int productWeight = 0;
+  double productWeight = 0;
 
   @override
   void didChangeDependencies() {
     if (_isInit) {
       _isLoading = false;
 
-      productWeight = int.parse(widget.wasteItem.exact_weight);
+      productWeight = double.parse(widget.wasteItem.exact_weight);
 //      changeNumberAnimation(double.parse(
 //              getPrice(widget.wasteItem.prices, widget.wasteItem.weight)) *
 //          widget.wasteItem.weight);
@@ -187,7 +187,7 @@ class _CollectDeliveryDetailItemState extends State<CollectDeliveryDetailItem>wi
                             style: TextStyle(
                               color: AppTheme.black,
                               fontFamily: 'Iransans',
-                              fontSize: textScaleFactor * 14,
+                              fontSize: textScaleFactor * 16,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -500,7 +500,7 @@ class _CollectDeliveryDetailItemState extends State<CollectDeliveryDetailItem>wi
 //                          ],
 //                        ),
 //                      ),
-                      SizedBox(width: constraints.maxWidth*0.05,)
+                      SizedBox(width: constraints.maxWidth*0.01,)
 
                     ],
                   ),
